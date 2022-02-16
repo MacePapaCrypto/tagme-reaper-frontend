@@ -48,7 +48,7 @@ export default function ConnectWallet() {
       // send ether and pay to change state within the blockchain.
       // For this, you need the account signer...
       const signer = provider.getSigner();
-      const message = await signer.signMessage(code!.toString());
+      const message = await signer.signMessage("Sign this message to connect your wallet.");
       let data = await axios.post("/.netlify/functions/verify", {
         message,
         code,
