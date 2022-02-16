@@ -30,14 +30,6 @@ export default function ConnectWallet() {
     }
   }
 
-  const params = new URLSearchParams(window.location.search);
-  if (!params.has("code")) {
-    alert("The link you have used is invalid or expired");
-    // TODO: Make the page look disabled
-  }
-  const code = params.get("code");
-  // TODO: Verify Code Here (on page load)
-
   const signMessageToConnect = async () => {
       // Get the user account
       const accounts = await window.ethereum.enable();
@@ -48,10 +40,9 @@ export default function ConnectWallet() {
       // send ether and pay to change state within the blockchain.
       // For this, you need the account signer...
       const signer = provider.getSigner();
-      const message = await signer.signMessage("Sign this message to connect your wallet.");
+      const message = await signer.signMessage("Connect your wallet for goodies.");
       let data = await axios.post("/.netlify/functions/verify", {
         message,
-        code,
         account,
       });
       console.log(data);
@@ -69,14 +60,14 @@ export default function ConnectWallet() {
       }
   }
 
-  const connectWalletAndSign = async () => {
-    await connectWalletFunction();
-    await signMessageToConnect();
-  }
-
   return (
     <div className="connectInfo">
-      <a role="button" onClick={connectWalletAndSign} className="connectButton">{ state.walletAddress === "" ? "Connect" : "Connected" }</a>
+      {
+        state.walletAddress === "" ? 
+        <a role="button" onClick={connectWalletFunction} className="connectButton">Connect</a> :
+        <a role="button" onClick={signMessageToConnect} className="connectButton">Sign</a>
+      }
+      
     </div>
   );
 }
