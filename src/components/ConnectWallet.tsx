@@ -30,6 +30,12 @@ export default function ConnectWallet() {
     }
   }
 
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has("code")) {
+    alert("The link you have used is invalid or expired");
+  }
+  const code = params.get("code");
+  
   const signMessageToConnect = async () => {
       // Get the user account
       const accounts = await window.ethereum.enable();
@@ -43,6 +49,7 @@ export default function ConnectWallet() {
       const message = await signer.signMessage("Connect your wallet for goodies.");
       let data = await axios.post("/.netlify/functions/verify", {
         message,
+        code,
         account,
       });
       console.log(data);
