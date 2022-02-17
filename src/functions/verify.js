@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+import fetch from "node-fetch";
 
 exports.handler = async function (event, context) {
     const response = await fetch(`${process.env.SERVER_ADDRESS}/verifyAddress`, {
