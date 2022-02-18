@@ -38,7 +38,7 @@ export default function ConnectWallet() {
 
   const signMessageToConnect = async () => {
       //Check if the code is valid/expired and code is already used and user is verified
-      let { data } = await axios.post("/.netlify/functions/checkCode", {
+      let { data } = await axios.post("/.netlify/functions/checkcode", {
         code,
       });
 
