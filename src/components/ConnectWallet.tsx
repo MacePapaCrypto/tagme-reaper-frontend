@@ -35,8 +35,18 @@ export default function ConnectWallet() {
     alert("The link you have used is invalid or expired");
   }
   const code = params.get("code");
-  
+
   const signMessageToConnect = async () => {
+      //Check if the code is valid/expired and code is already used and user is verified
+      let { data } = await axios.post("/.netlify/functions/checkCode", {
+        code,
+      });
+
+      if (!data.verified) {
+        alert("Link is invalid. Please try verifying again on discord.");
+        return;
+      }
+    
       // Get the user account
       const accounts = await window.ethereum.enable();
       const account = accounts[0];
@@ -46,8 +56,8 @@ export default function ConnectWallet() {
       // send ether and pay to change state within the blockchain.
       // For this, you need the account signer...
       const signer = provider.getSigner();
-      const message = await signer.signMessage("Connect your wallet for goodies.");
-      let data = await axios.post("/.netlify/functions/verify", {
+      const message = await signer.signMessage(code!);
+      data = await axios.post("/.netlify/functions/verify", {
         message,
         code,
         account,
